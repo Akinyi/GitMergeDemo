@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import static java.nio.file.Files.write;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -92,42 +93,47 @@ public class InlämningsUppgift02v2 {
         String pnr,  finnsPersonNummer, finnsPersonNamn, senastBetalning;
         String[] pnrAndName;
         LocalDate dateNow = LocalDate.now();
-//    
- //   Scanner sc = new Scanner(System.in);
-    System.out.print("Kundens personnummer eller namn: "); System.out.flush();
-    pnr = sc.nextLine().trim();
-//    System.out.println(" ");
-     BufferedWriter utfil = new BufferedWriter(new FileWriter("customersTrained2.txt", true));
     
-//   
-//    //Scanner fileScanner = new Scanner(infil); 
-      BufferedReader infil = new BufferedReader(new FileReader("customers2.txt"));      
-            while((pnr = infil.readLine())!= null){
-               System.out.println(pnr);
-               firstLine = infil.readLine();
+    Scanner scPN = new Scanner(System.in);
+    System.out.print("Kundens personnummer eller namn: "); System.out.flush();
+    pnr = scPN.nextLine().trim();
+    System.out.println(" ");
+    try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath))){
+     inFilePath = Paths.get(filePath);
+            Scanner fileScanner = new Scanner(inFilename); 
+            while (fileScanner.hasNext()){
+            
+               firstLine = fileScanner.nextLine();
                
                pnrAndName = firstLine.split(","); // Splitar raden med komma till två strings
                finnsPersonNummer = pnrAndName[0].trim(); // personnummer
-              // finnsPersonNamn = pnrAndName[1].trim();   // namn
+            
                 if(findID(finnsPersonNummer,pnr) == 1 ){// || findName(finnsPersonNamn,pnr) == 1
                 System.out.println("\n"+firstLine);   
-                utfil.write(firstLine + "\n");}
-                secondLine = infil.readLine();
+                write.println(firstLine + "\n");
+                
+                  if(fileScanner.hasNext())
+                   secondLine = fileScanner.nextLine();
 
                    int paid = compareLastInlogg(secondLine); 
                  
                     System.out.println("Senast avgiftsbetalning: " + secondLine + "\n");
                     System.out.println(checkMembership(paid) + "\n");
-                    utfil.append("Inloggad: " + dateNow + "  \n" +
+                    write.println("Inloggad: " + dateNow + "  \n" +
                     checkMembership(paid)+"\n" ); // Prints out to customersTrained File
-                    utfil.append("--------------------------------------------");// prints a separator line
-                    
-                  }
-                utfil.close();
+                    write.println("--------------------------------------------");// prints a separator line
+                }
+              }
                
-            }
+              
+            }catch(Exception e){
+            System.out.println("Could not find text in file");
+            //e.printStackTrace();
+            System.out.flush();
+            System.exit(0);
+       }
 
-    
+    }
         
     public static void main(String[] args) throws IOException {
       InlämningsUppgift02v2 inup = new InlämningsUppgift02v2();
