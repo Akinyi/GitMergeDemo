@@ -1,26 +1,31 @@
 
 package inlämningsuppgift02v2;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.nio.file.Files.write;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.Scanner;
+import java.nio.file.StandardOpenOption;
+import java.nio.charset.StandardCharsets;
 
 
 public class InlämningsUppgift02v2 {
 
     
       //Metoder
+    /**
+     * 
+     * @param customerNr
+     * @param pnr
+     * @return i
+     */
     public int findID(String customerNr, String pnr){
         int i = 1;
         if(customerNr.equals(pnr)){
@@ -31,7 +36,12 @@ public class InlämningsUppgift02v2 {
         
      return i;   
     }
-
+/**
+ * 
+ * @param customerName
+ * @param name
+ * @return i
+ */
      public int findName(String customerName, String name){
         customerName = customerName.trim();
         name = name.trim();
@@ -44,7 +54,11 @@ public class InlämningsUppgift02v2 {
         
        return i;   
       } 
-
+/**
+ * 
+ * @param date
+ * @return paid
+ */
      public int compareLastInlogg(String date){
         int paid;
         String recentPayment;
@@ -57,7 +71,11 @@ public class InlämningsUppgift02v2 {
         paid = Integer.parseInt(p);
         return paid;
     }
-     
+     /**
+      * 
+      * @param paid
+      * @return gymMember
+      */
       public String checkMembership(int paid){
         String gymMember;
                 
@@ -89,29 +107,26 @@ public class InlämningsUppgift02v2 {
         String pnr,  finnsPersonNummer, finnsPersonNamn="";
         String[] pnrAndName;
         LocalDate dateNow = LocalDate.now();
+        StringBuilder sb = new StringBuilder();
+        sb.append("");
     
     Scanner scPN = new Scanner(System.in);
     System.out.print("Kundens personnummer: "); System.out.flush();
     pnr = scPN.nextLine().trim();
     System.out.println(" ");
-    try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath))){
+    try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath,StandardCharsets.UTF_16, StandardOpenOption.APPEND))){
      inFilePath = Paths.get(filePath);
             Scanner fileScanner = new Scanner(inFilename); 
             while (fileScanner.hasNext()){
             
                firstLine = fileScanner.nextLine();
-               
                pnrAndName = firstLine.split(","); // Splitar raden med komma till två strings
                finnsPersonNummer = pnrAndName[0].trim(); // personnummer
                 if(findID(finnsPersonNummer,pnr) == 1 ){ 
                 System.out.println("\n"+firstLine);
-                write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
                 
-//                finnsPersonNamn = pnrAndName[1].trim();
-//                if(findID(finnsPersonNamn,pnr) == 1 ){
-//                System.out.println("\n"+firstLine);   
-//                write.println(firstLine + "\n");
-                 
+                write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
+       
                 if(fileScanner.hasNext())
                    secondLine = fileScanner.nextLine();
 
@@ -123,7 +138,7 @@ public class InlämningsUppgift02v2 {
                     checkMembership(paid)+"\n" ); // Prints out to customersTrained File
                     write.println("--------------------------------------------");// prints a separator line
                 }
-                
+                               
               }
                
               
