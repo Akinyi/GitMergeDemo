@@ -114,7 +114,8 @@ public class InlämningsUppgift02v2 {
     System.out.print("Kundens personnummer: "); System.out.flush();
     pnr = scPN.nextLine().trim();
     System.out.println(" ");
-    try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath,StandardCharsets.UTF_16, StandardOpenOption.APPEND))){
+    try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath,
+            StandardCharsets.UTF_8, StandardOpenOption.APPEND))){
      inFilePath = Paths.get(filePath);
             Scanner fileScanner = new Scanner(inFilename); 
             while (fileScanner.hasNext()){
@@ -125,7 +126,7 @@ public class InlämningsUppgift02v2 {
                 if(findID(finnsPersonNummer,pnr) == 1 ){ 
                 System.out.println("\n"+firstLine);
                 
-                write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
+                //write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
        
                 if(fileScanner.hasNext())
                    secondLine = fileScanner.nextLine();
@@ -134,9 +135,13 @@ public class InlämningsUppgift02v2 {
                  
                     System.out.println("Senast avgiftsbetalning: " + secondLine + "\n");
                     System.out.println(checkMembership(paid) + "\n");
+                 // skriver bara betalande kunder till customersTrained2 filen   
+                    if(paid==0){
+                    write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
                     write.println("Inloggad: " + dateNow + "  \n" +
                     checkMembership(paid)+"\n" ); // Prints out to customersTrained File
                     write.println("--------------------------------------------");// prints a separator line
+                    }
                 }
                                
               }
