@@ -85,17 +85,13 @@ public class InlämningsUppgift02v2 {
         Path inFilePath;
         String outFilePathString = "src\\inlämningsuppgift02v2\\customersTrained2.txt";
         Path outFilePath = Paths.get("src\\inlämningsuppgift02v2\\customersTrained2.txt");
-//        FileWriter fw = new FileWriter(filePath, shouldAppend);
-//    //PrintWriter w = new PrintWriter(new BufferedWriter(new FileWriter(filnamn)));
-//  
-//    //BufferedWriter utfil = new BufferedWriter(new FileWriter("customersTrained2.txt", true));
-//    
-        String pnr,  finnsPersonNummer, finnsPersonNamn, senastBetalning;
+
+        String pnr,  finnsPersonNummer, finnsPersonNamn="";
         String[] pnrAndName;
         LocalDate dateNow = LocalDate.now();
     
     Scanner scPN = new Scanner(System.in);
-    System.out.print("Kundens personnummer eller namn: "); System.out.flush();
+    System.out.print("Kundens personnummer: "); System.out.flush();
     pnr = scPN.nextLine().trim();
     System.out.println(" ");
     try(PrintWriter write = new PrintWriter(Files.newBufferedWriter(outFilePath))){
@@ -107,12 +103,16 @@ public class InlämningsUppgift02v2 {
                
                pnrAndName = firstLine.split(","); // Splitar raden med komma till två strings
                finnsPersonNummer = pnrAndName[0].trim(); // personnummer
-            
-                if(findID(finnsPersonNummer,pnr) == 1 ){// || findName(finnsPersonNamn,pnr) == 1
-                System.out.println("\n"+firstLine);   
-                write.println(firstLine + "\n");
+                if(findID(finnsPersonNummer,pnr) == 1 ){ 
+                System.out.println("\n"+firstLine);
+                write.print("Personnummer: " + pnrAndName[0] + "\nNamn: " + pnrAndName[1] +  "\n");
                 
-                  if(fileScanner.hasNext())
+//                finnsPersonNamn = pnrAndName[1].trim();
+//                if(findID(finnsPersonNamn,pnr) == 1 ){
+//                System.out.println("\n"+firstLine);   
+//                write.println(firstLine + "\n");
+                 
+                if(fileScanner.hasNext())
                    secondLine = fileScanner.nextLine();
 
                    int paid = compareLastInlogg(secondLine); 
@@ -123,6 +123,7 @@ public class InlämningsUppgift02v2 {
                     checkMembership(paid)+"\n" ); // Prints out to customersTrained File
                     write.println("--------------------------------------------");// prints a separator line
                 }
+                
               }
                
               
